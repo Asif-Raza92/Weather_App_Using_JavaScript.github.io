@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App - Using JavaScript</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="card">
+        <div class="search">
+            <input type="text" placeholder="Enter city name" spellcheck="false">
+            <button>
+                <img src="images/search.png" alt="Search">
+            </button>
+        </div>
+        <div class="error">
+            <p>Invalid City Name</p>
+        </div>
+        <div class="weather">
+            <img src="images/rain.png" alt="Rain" class="weather-icon">
+            <h1 class="temp">35°c</h1>
+            <h2 class="city">New Delhi</h2>
+            <div class="details">
+                <div class="col">
+                    <img src="images/humidity.png" alt="Humidity">
+                    <div>
+                        <p class="humidity">60%</p>
+                        <p>Humidity</p>
+                    </div>
+                </div>
+                <div class="col">
+                    <img src="images/wind.png" alt="Wind">
+                    <div>
+                        <p class="wind">12 km/hr</p>
+                        <p>Wind Speed</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+   
+<script>
+const apiKey = "13895ea20e69a602f4054f1832cad146";
+const apiUrl = "https://api.openweathermap.org/data/2.5/weather?units=metric&q=";
+
+const searchBox = document.querySelector(".search input");
+const searchBtn = document.querySelector(".search button");
+const weatherIcon = document.querySelector(".weather-icon");
+
+async function fetchWeather(city) {
+    try {
+        const response = await fetch(`${apiUrl}${city}&appid=${apiKey}`);
+        
+        if (!response.ok) {
+            // Show "Invalid City Name" if the city is not found
+            document.querySelector(".error").innerText = "Invalid City Name";
+            document.querySelector(".error").style.display = "block";
+            document.querySelector(".weather").style.display = "none";
+            return;
+        }
+
+        const data = await response.json();
+
+        // Update UI with weather data
+        document.querySelector(".city").innerText = data.name;
+        document.querySelector(".temp").innerText = `${Math.round(data.main.temp)}°c`;
+        document.querySelector(".humidity").innerText = `${data.main.humidity}%`;
+        document.querySelector(".wind").innerText = `${data.wind.speed} km/hr`;
+
+        // Set weather icon based on the condition
+        const weatherCondition = data.weather[0].main;
+        if (weatherCondition === "Clouds") {
+            weatherIcon.src = "images/clouds.png";
+        } else if (weatherCondition === "Clear") {
+            weatherIcon.src = "images/clear.png";
+        } else if (weatherCondition === "Rain") {
+            weatherIcon.src = "images/rain.png";
+        } else if (weatherCondition === "Drizzle") {
+            weatherIcon.src = "images/drizzle.png";
+        } else if (weatherCondition === "Mist") {
+            weatherIcon.src = "images/mist.png";
+        } else {
+            weatherIcon.src = "images/default.png"; // Fallback image
+        }
+
+        // Show weather information and hide error message
+        document.querySelector(".weather").style.display = "block";
+        document.querySelector(".error").style.display = "none";
+    } catch (error) {
+        console.error("Error fetching weather data:", error);
+        alert("Something went wrong. Please try again later.");
+    }
+}
+
+
+// Search button click event
+searchBtn.addEventListener("click", () => {
+    const city = searchBox.value.trim();
+    if (city) {
+        fetchWeather(city);
+    } else {
+        alert("Please enter a city name!");
+    }
+});
+
+// Allow searching by pressing the "Enter" key
+searchBox.addEventListener("keypress", (e) => {
+    if (e.key === "Enter") {
+        const city = searchBox.value.trim();
+        if (city) {
+            fetchWeather(city);
+        } else {
+            alert("Please enter a city name!");
+        }
+    }
+});
+
+// Default state: hide weather and error initially
+document.querySelector(".weather").style.display = "none";
+document.querySelector(".error").style.display = "none";
+
+
+</script>
+</body>
+</html>
