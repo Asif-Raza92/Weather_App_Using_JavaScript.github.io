@@ -3,6 +3,8 @@ Thanks For Support
 Weather App 🌦️
 A simple and interactive weather application that allows users to search for current weather conditions of any city around the world. The app fetches real-time weather data using the OpenWeatherMap API and displays key details like temperature, humidity, wind speed, and a weather icon representing the current condition.
 
+Disclaimer : This project is made with the help of Tutorial and I add some features and changed its User interface also take help of Ai to solve only error in projects.
+
 Features
 🌍 Search by City: Enter any city name to get its current weather details.
 📉 Error Handling: Displays "Invalid City Name" when a non-existent city is entered.
